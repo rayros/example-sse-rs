@@ -1,0 +1,6 @@
+[package]
+
+name = "example-sse-rs"
+version = "0.0.1"
+authors = ["Paweł Łaski <plaski@wit.edu.pl>"]
+
