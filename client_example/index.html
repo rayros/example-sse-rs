@@ -1,0 +1,24 @@
+<html>
+<head>
+  <style>
+    div {
+      overflow: auto;
+      width: 200px;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+<script>
+  var source = new EventSource("http://localhost:3002/");
+  source.onmessage = function(event) {
+        result = document.getElementById("result");
+        result.innerHTML += event.data + "<br>";
+        result.scrollTop = result.scrollHeight;
+  };
+</script>
+<img src="assets/images/rust-logo-128x128-blk-v2.png">
+<b> RUST </b>
+<div id="result"></div>
+</body>
+</html>
