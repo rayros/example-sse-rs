@@ -10,7 +10,7 @@
 </head>
 <body>
 <script>
-  var source = new EventSource("http://localhost:3002/");
+  var source = new EventSource("http://localhost:3002/asd.asd");
   source.onmessage = function(event) {
         result = document.getElementById("result");
         result.innerHTML += event.data + "<br>";

@@ -1,18 +1,11 @@
 extern crate time;
+extern crate regex;
 use std::io::Timer;
 use std::time::Duration;
-use std::collections::HashMap;
 use std::io::{TcpListener, TcpStream};
 mod server;
-
-fn get_headers(status: &str, map: HashMap<&str, &str>) -> Vec<u8> {
-  let mut result = format!("HTTP/1.1 {}\r\n", status);
-  for (key, val) in map.iter() {
-    result = result + format!("{}: {}\r\n", key, val);
-  }
-  result = result + "\r\n"; // end of headers
-  result.into_bytes()
-}
+mod request;
+mod headers;
 
 fn main() {
 
@@ -26,20 +19,15 @@ fn main() {
 }
 
 fn handle_client(mut stream: TcpStream) {
-    let mut headers_map = HashMap::new();
-    headers_map.insert("Content-Type", "text/event-stream"); 
-    headers_map.insert("Connection", "keep-alive"); 
-    headers_map.insert("Cache-Control", "no-cache");
-    headers_map.insert("Access-Control-Allow-Origin", "*");
-    let headers = get_headers("200 OK", headers_map);
-    let mut buf = [0u8, ..1024];
-    stream.read(buf);
+
+    let request = request::Request::new(stream.clone());
+    let headers = headers::Headers::new();
     let respon: String = "data: elsds\n\n".to_string();
     let mut timer = Timer::new().unwrap();
-    stream.write(headers.as_slice());
+    println!("{}", request.path);
+    headers.to_stream(stream.clone());
     loop { 
         stream.write(respon.clone().into_bytes().as_slice());
-        //println!("{}", time::now().asctime());
         timer.sleep(Duration::milliseconds(100));
     }
     stream.close_write();
